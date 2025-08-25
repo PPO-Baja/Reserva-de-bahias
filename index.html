@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#ff5722">
-<link rel="manifest" href="manifest.json">
-<link rel="icon" href="icon-192.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="/icon-192.png">
 <style>
   :root {
     --accent: #ff5722;
@@ -151,6 +151,8 @@
     });
   }
 
+  const API_URL = 'URL_DE_TU_APLICACION_WEB_EN_GOOGLE_APPS_SCRIPT'; // Reemplaza con la URL real de tu Google Apps Script
+
   function mostrarMensaje(texto, tipo) {
     const msg = document.getElementById("mensaje");
     msg.textContent = texto;
@@ -159,8 +161,15 @@
     setTimeout(() => msg.style.display = "none", 3000);
   }
 
-  function cargarBahias(bahiaReservada) {
-    google.script.run.withSuccessHandler(function(bahias) {
+  async function cargarBahias(bahiaReservada) {
+    try {
+      const response = await fetch(`${API_URL}?action=obtenerBahias`, {
+        method: 'GET',
+        mode: 'cors',
+        credentials: 'include'
+      });
+      const bahias = await response.json();
+
       const cont = document.getElementById('contenedor');
       cont.innerHTML = '';
 
@@ -189,7 +198,7 @@
         }
 
         if (b.estado === 'Libre') {
-          div.onclick = function() {
+          div.onclick = async function() {
             const input = document.getElementById('instalador');
             const instalador = input.value.trim();
             if (!instalador) {
@@ -198,7 +207,14 @@
               mostrarMensaje("Por favor ingresa tu número de instalador", "error");
               return;
             }
-            google.script.run.withSuccessHandler(function(exito) {
+
+            try {
+              const response = await fetch(`${API_URL}?action=reservarBahia&nombreBahia=${encodeURIComponent(b.nombre)}&instalador=${encodeURIComponent(instalador)}`, {
+                method: 'GET',
+                mode: 'cors',
+                credentials: 'include'
+              });
+              const exito = await response.json();
               input.value = '';
               if (exito) {
                 mostrarMensaje("Reservaste " + b.nombre, "ok");
@@ -207,7 +223,9 @@
                 mostrarMensaje("Esa bahía ya fue ocupada", "error");
                 cargarBahias();
               }
-            }).reservarBahia(b.nombre, instalador);
+            } catch (error) {
+              mostrarMensaje("Error al reservar la bahía", "error");
+            }
           };
         }
 
@@ -215,7 +233,9 @@
 
         cont.appendChild(div);
       });
-    }).obtenerBahias();
+    } catch (error) {
+      mostrarMensaje("Error al cargar las bahías", "error");
+    }
   }
 
   cargarBahias();
