@@ -2,7 +2,7 @@
   "name": "Reserva de Bahías PPO",
   "short_name": "PPO Bahías",
   "description": "Aplicación para la reserva de bahías de instalación.",
-  "start_url": "/main/index.html",
+  "start_url": "/index.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#ff5722",
