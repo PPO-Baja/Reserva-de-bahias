@@ -1,36 +1,39 @@
-const CACHE_NAME = 'ppo-bahias-v1';
+const CACHE_NAME = 'bahias-cache-v1';
 const urlsToCache = [
   '/',
   '/index.html',
+  '/manifest.json',
+  '/sw.js',
   '/icon-192.png',
-  '/icon-512.png'
+  '/icon-512.png',
+  // Agrega otras imágenes, CSS y archivos que quieras cachear
 ];
 
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(urlsToCache))
+      .then(cache => {
+        console.log('Cacheando archivos estáticos');
+        return cache.addAll(urlsToCache);
+      })
   );
 });
 
 self.addEventListener('fetch', event => {
   event.respondWith(
     caches.match(event.request)
-      .then(response => response || fetch(event.request))
-  );
-});
+      .then(response => {
+        // Si el archivo está en caché, lo devuelve
+        if (response) {
+          return response;
+        }
 
-self.addEventListener('activate', event => {
-  const cacheWhitelist = [CACHE_NAME];
-  event.waitUntil(
-    caches.keys().then(cacheNames => {
-      return Promise.all(
-        cacheNames.map(cacheName => {
-          if (!cacheWhitelist.includes(cacheName)) {
-            return caches.delete(cacheName);
-          }
-        })
-      );
-    })
+        // Si no está, lo solicita a la red
+        return fetch(event.request);
+      })
+      .catch(() => {
+        // En caso de fallo, puedes devolver una página sin conexión
+        // return caches.match('/offline.html');
+      })
   );
 });
