@@ -1,11 +1,11 @@
 const CACHE_NAME = 'bahias-cache-v1';
 const urlsToCache = [
   '/',
-  '/index.html',
-  '/manifest.json',
-  '/sw.js',
-  '/icon-192.png',
-  '/icon-512.png',
+  '/main/index.html',
+  '/main/manifest.json',
+  '/main/sw.js',
+  '/main/icon-192.png',
+  '/main/icon-512.png',
   // Agrega otras imágenes, CSS y archivos que quieras cachear
 ];
 
@@ -37,3 +37,4 @@ self.addEventListener('fetch', event => {
       })
   );
 });
+
