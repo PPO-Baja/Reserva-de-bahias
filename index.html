@@ -151,7 +151,7 @@
     });
   }
 
-  const API_URL = 'https://script.google.com/macros/s/AKfycbxLgiG33S0peQcMbfdXxZBBiC9nKotiSgB7Rz2MJPCBw65eCGESuCBKe05HgEZ1jBNE/exec'; // Reemplaza con la URL real de tu Google Apps Script
+  const API_URL = 'https://script.google.com/macros/s/AKfycbxLgiG33S0peQcMbfdXxZBBiC9nKotiSgB7Rz2MJPCBw65eCGESuCBKe05HgEZ1jBNE/exec'; // Reemplaza con tu URL real
 
   function mostrarMensaje(texto, tipo) {
     const msg = document.getElementById("mensaje");
@@ -162,13 +162,19 @@
   }
 
   async function cargarBahias(bahiaReservada) {
+    console.log('Iniciando carga de bahías. API_URL:', API_URL);
     try {
       const response = await fetch(`${API_URL}?action=obtenerBahias`, {
         method: 'GET',
         mode: 'cors',
         credentials: 'include'
       });
+      console.log('Respuesta recibida:', response);
+      if (!response.ok) {
+        throw new Error(`Error HTTP: ${response.status} - ${response.statusText}`);
+      }
       const bahias = await response.json();
+      console.log('Datos de bahías:', bahias);
 
       const cont = document.getElementById('contenedor');
       cont.innerHTML = '';
@@ -234,6 +240,7 @@
         cont.appendChild(div);
       });
     } catch (error) {
+      console.error('Error en cargarBahias:', error);
       mostrarMensaje("Error al cargar las bahías", "error");
     }
   }
@@ -243,4 +250,3 @@
 
 </body>
 </html>
-
