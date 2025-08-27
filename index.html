@@ -1,123 +1,123 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#ff5722">
-<link rel="manifest" href="/manifest.json">
-<link rel="icon" href="/icon-192.png">
-<style>
-  :root {
-    --accent: #ff5722;
-    --muted: #666;
-  }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ff5722">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="/icon-192.png">
+  <style>
+    :root {
+      --accent: #ff5722;
+      --muted: #666;
+    }
 
-  body {
-    font-family: Arial, sans-serif;
-    text-align: center;
-    background: #f2f2f2;
-    margin: 1rem auto;
-    padding: 0 1rem;
-    max-width: 100%;
-  }
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: #f2f2f2;
+      margin: 1rem auto;
+      padding: 0 1rem;
+      max-width: 100%;
+    }
 
-  h2 { margin: 0; }
+    h2 { margin: 0; }
 
-  /* --- Brand --- */
-  .brand .toyota { color: var(--accent); font-weight: 500; }
-  .brand small { color: #0978C8; font-weight: 300; }
+    /* --- Brand --- */
+    .brand .toyota { color: var(--accent); font-weight: 500; }
+    .brand small { color: #0978C8; font-weight: 300; }
 
-  .brand-container {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
-    margin: 1rem auto;
-    font-size: .9rem;
-    color: var(--muted);
-    gap: .5rem;
-    text-align: center;
-  }
+    .brand-container {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      margin: 1rem auto;
+      font-size: .9rem;
+      color: var(--muted);
+      gap: .5rem;
+      text-align: center;
+    }
 
-  /* --- Input --- */
-  #instalador {
-    padding: .6rem 1rem;
-    font-size: .6rem;
-    text-align: center;
-    border-radius: .5rem;
-    border: 1px solid #ccc;
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
-    outline: none;
-    transition: border-color 0.3s, box-shadow 0.3s;
-    width: 50%;
-    max-width: 300px;
-  }
+    /* --- Input --- */
+    #instalador {
+      padding: .6rem 1rem;
+      font-size: .6rem;
+      text-align: center;
+      border-radius: .5rem;
+      border: 1px solid #ccc;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+      outline: none;
+      transition: border-color 0.3s, box-shadow 0.3s;
+      width: 50%;
+      max-width: 300px;
+    }
 
-  #instalador:focus { border-color: #28a745; box-shadow: 0 0 8px rgba(40,167,69,0.5); }
-  #instalador.error { animation: shake 0.3s; border-color: #dc3545; }
-  @keyframes shake {
-    25% { transform: translateX(-4px); }
-    50% { transform: translateX(4px); }
-    75% { transform: translateX(-4px); }
-  }
+    #instalador:focus { border-color: #28a745; box-shadow: 0 0 8px rgba(40,167,69,0.5); }
+    #instalador.error { animation: shake 0.3s; border-color: #dc3545; }
+    @keyframes shake {
+      25% { transform: translateX(-4px); }
+      50% { transform: translateX(4px); }
+      75% { transform: translateX(-4px); }
+    }
 
-  /* --- Mensajes --- */
-  #mensaje {
-    margin: .5rem;
-    padding: .5rem;
-    display: none;
-    border-radius: .3rem;
-    font-weight: bold;
-  }
-  .ok { background: #d4edda; color: #155724; }
-  .error { background: #f8d7da; color: #721c24; }
+    /* --- Mensajes --- */
+    #mensaje {
+      margin: .5rem;
+      padding: .5rem;
+      display: none;
+      border-radius: .3rem;
+      font-weight: bold;
+    }
+    .ok { background: #d4edda; color: #155724; }
+    .error { background: #f8d7da; color: #721c24; }
 
-  /* --- Grid flexible --- */
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
-    gap: .5rem;
-    margin: 1rem auto;
-    width: 100%;
-    max-width: 600px;
-  }
+    /* --- Grid flexible --- */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+      gap: .5rem;
+      margin: 1rem auto;
+      width: 100%;
+      max-width: 600px;
+    }
 
-  .bahia {
-    aspect-ratio: 1 / 1; /* siempre cuadrado */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    border-radius: .6rem;
-    color: white;
-    font-weight: bold;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.2);
-    cursor: pointer;
-    font-size: .8rem;
-    transition: transform .1s;
-    padding: 0.5rem;
-  }
-  .bahia:hover { transform: scale(1.05); }
-  .libre { background: #28a745; }
-  .ocupada { background: #dc3545; cursor: not-allowed; }
+    .bahia {
+      aspect-ratio: 1 / 1; /* siempre cuadrado */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border-radius: .6rem;
+      color: white;
+      font-weight: bold;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+      cursor: pointer;
+      font-size: .8rem;
+      transition: transform .1s;
+      padding: 0.5rem;
+    }
+    .bahia:hover { transform: scale(1.05); }
+    .libre { background: #28a745; }
+    .ocupada { background: #dc3545; cursor: not-allowed; }
 
-  .flash-pop { animation: flashPopAnim 0.6s; }
-  @keyframes flashPopAnim {
-    30% { background: #ffc107; transform: scale(1.2); }
-    60% { background: #28a745; transform: scale(1.1); }
-  }
+    .flash-pop { animation: flashPopAnim 0.6s; }
+    @keyframes flashPopAnim {
+      30% { background: #ffc107; transform: scale(1.2); }
+      60% { background: #28a745; transform: scale(1.1); }
+    }
 
-  .nombre-bahia { font-size: .6rem; }
-  .nombre-instalador { font-size: .9rem; margin-top: .2rem; font-weight: bold; }
-  .foto-instalador {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    margin-top: .2rem;
-    object-fit: cover;
-    border: 2px solid white;
-  }
-</style>
+    .nombre-bahia { font-size: .6rem; }
+    .nombre-instalador { font-size: .9rem; margin-top: .2rem; font-weight: bold; }
+    .foto-instalador {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-top: .2rem;
+      object-fit: cover;
+      border: 2px solid white;
+    }
+  </style>
 </head>
 <body>
 
@@ -137,7 +137,26 @@
 <!-- Contenedor de bahías -->
 <div id="contenedor" class="grid"></div>
 
-<script>
+<script type="module">
+  // Import Firebase SDKs
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js';
+  import { getDatabase, ref, onValue, set } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js';
+
+  // Your Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyDZOGHFPrx52Hx1qUKPU_c6VpiGvrHL0_k",
+    authDomain: "reserva-de-bahias.firebaseapp.com",
+    databaseURL: "https://reserva-de-bahias-default-rtdb.firebaseio.com",
+    projectId: "reserva-de-bahias",
+    storageBucket: "reserva-de-bahias.firebasestorage.app",
+    messagingSenderId: "506659561186",
+    appId: "1:506659561186:web:85ddac2764073d21dbc8bb"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+
   // Registrar el service worker
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
@@ -151,8 +170,6 @@
     });
   }
 
-  const API_URL = 'https://script.google.com/macros/s/AKfycbxkJ9d-ZxkZroM2la6deZCDpg5SfB1H3EujxvGvB9_yQkQ2kWsBluBut5EZKmLPpeg2/exec'; // Reemplaza con tu URL real
-
   function mostrarMensaje(texto, tipo) {
     const msg = document.getElementById("mensaje");
     msg.textContent = texto;
@@ -162,82 +179,82 @@
   }
 
   async function cargarBahias(bahiaReservada) {
-    console.log('Iniciando carga de bahías. API_URL:', API_URL);
+    console.log('Iniciando carga de bahías desde Firebase.');
     try {
-      const response = await fetch(`${API_URL}?action=obtenerBahias`, {
-        method: 'GET',
-        mode: 'cors',
-        credentials: 'include'
-      });
-      console.log('Respuesta recibida:', response);
-      if (!response.ok) {
-        throw new Error(`Error HTTP: ${response.status} - ${response.statusText}`);
-      }
-      const bahias = await response.json();
-      console.log('Datos de bahías:', bahias);
+      const bahiasRef = ref(db, 'bahias');
+      onValue(bahiasRef, (snapshot) => {
+        const bahias = snapshot.val();
+        if (!bahias) {
+          mostrarMensaje("No se encontraron bahías", "error");
+          return;
+        }
 
-      const cont = document.getElementById('contenedor');
-      cont.innerHTML = '';
+        const cont = document.getElementById('contenedor');
+        cont.innerHTML = '';
 
-      bahias.forEach(b => {
-        const div = document.createElement('div');
-        div.className = 'bahia ' + (b.estado === 'Libre' ? 'libre' : 'ocupada');
+        Object.keys(bahias).forEach(key => {
+          const b = { nombre: key, ...bahias[key] };
+          const div = document.createElement('div');
+          div.className = 'bahia ' + (b.estado === 'Libre' ? 'libre' : 'ocupada');
 
-        const bahiaDiv = document.createElement('div');
-        bahiaDiv.className = 'nombre-bahia';
-        bahiaDiv.textContent = b.nombre;
-        div.appendChild(bahiaDiv);
+          const bahiaDiv = document.createElement('div');
+          bahiaDiv.className = 'nombre-bahia';
+          bahiaDiv.textContent = b.nombre;
+          div.appendChild(bahiaDiv);
 
-        if (b.estado === 'Ocupada' && b.instalador) {
-          const instDiv = document.createElement('div');
-          instDiv.className = 'nombre-instalador';
-          instDiv.textContent = b.instalador;
-          div.appendChild(instDiv);
+          if (b.estado === 'Ocupada' && b.instalador) {
+            const instDiv = document.createElement('div');
+            instDiv.className = 'nombre-instalador';
+            instDiv.textContent = b.instalador;
+            div.appendChild(instDiv);
 
-          if (b.fotoUrl) {
-            const img = document.createElement('img');
-            img.className = 'foto-instalador';
-            img.src = b.fotoUrl;
-            img.alt = 'Foto de ' + b.instalador;
-            div.appendChild(img);
+            if (b.fotoUrl) {
+              const img = document.createElement('img');
+              img.className = 'foto-instalador';
+              img.src = b.fotoUrl;
+              img.alt = 'Foto de ' + b.instalador;
+              div.appendChild(img);
+            }
           }
-        }
 
-        if (b.estado === 'Libre') {
-          div.onclick = async function() {
-            const input = document.getElementById('instalador');
-            const instalador = input.value.trim();
-            if (!instalador) {
-              input.classList.add('error');
-              setTimeout(() => input.classList.remove('error'), 300);
-              mostrarMensaje("Por favor ingresa tu número de instalador", "error");
-              return;
-            }
-
-            try {
-              const response = await fetch(`${API_URL}?action=reservarBahia&nombreBahia=${encodeURIComponent(b.nombre)}&instalador=${encodeURIComponent(instalador)}`, {
-                method: 'GET',
-                mode: 'cors',
-                credentials: 'include'
-              });
-              const exito = await response.json();
-              input.value = '';
-              if (exito) {
-                mostrarMensaje("Reservaste " + b.nombre, "ok");
-                cargarBahias(b.nombre);
-              } else {
-                mostrarMensaje("Esa bahía ya fue ocupada", "error");
-                cargarBahias();
+          if (b.estado === 'Libre') {
+            div.onclick = async function() {
+              const input = document.getElementById('instalador');
+              const instalador = input.value.trim();
+              if (!instalador) {
+                input.classList.add('error');
+                setTimeout(() => input.classList.remove('error'), 300);
+                mostrarMensaje("Por favor ingresa tu número de instalador", "error");
+                return;
               }
-            } catch (error) {
-              mostrarMensaje("Error al reservar la bahía", "error");
-            }
-          };
-        }
 
-        if (bahiaReservada && b.nombre === bahiaReservada) div.classList.add('flash-pop');
+              try {
+                const bahiaRef = ref(db, `bahias/${b.nombre}`);
+                const snapshot = await onValue(bahiaRef, { onlyOnce: true });
+                if (snapshot.val()?.estado === 'Libre') {
+                  await set(bahiaRef, {
+                    estado: 'Ocupada',
+                    instalador: instalador,
+                    fotoUrl: b.fotoUrl || ''
+                  });
+                  mostrarMensaje(`Reservaste ${b.nombre}`, "ok");
+                  input.value = '';
+                } else {
+                  mostrarMensaje("Esa bahía ya fue ocupada", "error");
+                }
+              } catch (error) {
+                console.error('Error al reservar la bahía:', error);
+                mostrarMensaje("Error al reservar la bahía", "error");
+              }
+            };
+          }
 
-        cont.appendChild(div);
+          if (bahiaReservada && b.nombre === bahiaReservada) div.classList.add('flash-pop');
+
+          cont.appendChild(div);
+        });
+      }, {
+        onlyOnce: false // Escucha cambios en tiempo real
       });
     } catch (error) {
       console.error('Error en cargarBahias:', error);
@@ -250,8 +267,3 @@
 
 </body>
 </html>
-
-
-
-
-
