@@ -1,10 +1,10 @@
 {
-  "name": "Reserva de Bahías PPO",
-  "short_name": "PPO Bahías",
-  "description": "Aplicación para la reserva de bahías de instalación.",
+  "name": "Reserva de Bahías",
+  "short_name": "Bahías PPO",
+  "description": "Aplicación para reservar bahías en PPO Baja California",
   "start_url": "/index.html",
   "display": "standalone",
-  "background_color": "#ffffff",
+  "background_color": "#f2f2f2",
   "theme_color": "#ff5722",
   "icons": [
     {
