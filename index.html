@@ -183,8 +183,8 @@
     try {
       const bahiasRef = ref(db, 'bahias');
       onValue(bahiasRef, (snapshot) => {
-        const bahias = snapshot.val();
-        if (!bahias) {
+        const data = snapshot.val();
+        if (!data) {
           mostrarMensaje("No se encontraron bahías", "error");
           return;
         }
@@ -192,69 +192,74 @@
         const cont = document.getElementById('contenedor');
         cont.innerHTML = '';
 
-        Object.keys(bahias).forEach(key => {
-          const b = { nombre: key, ...bahias[key] };
-          const div = document.createElement('div');
-          div.className = 'bahia ' + (b.estado === 'Libre' ? 'libre' : 'ocupada');
+        const instaladores = data.instaladores || {};
+        Object.keys(data).forEach(key => {
+          if (key !== 'instaladores') {
+            const b = { nombre: key, ...data[key] };
+            const div = document.createElement('div');
+            div.className = 'bahia ' + (b.estado === 'Libre' ? 'libre' : 'ocupada');
 
-          const bahiaDiv = document.createElement('div');
-          bahiaDiv.className = 'nombre-bahia';
-          bahiaDiv.textContent = b.nombre;
-          div.appendChild(bahiaDiv);
+            const bahiaDiv = document.createElement('div');
+            bahiaDiv.className = 'nombre-bahia';
+            bahiaDiv.textContent = b.nombre;
+            div.appendChild(bahiaDiv);
 
-          if (b.estado === 'Ocupada' && b.instalador) {
-            const instDiv = document.createElement('div');
-            instDiv.className = 'nombre-instalador';
-            instDiv.textContent = b.instalador;
-            div.appendChild(instDiv);
+            if (b.estado === 'Ocupada' && b.instalador) {
+              const instDiv = document.createElement('div');
+              instDiv.className = 'nombre-instalador';
+              instDiv.textContent = b.instalador;
+              div.appendChild(instDiv);
 
-            if (b.fotoUrl) {
-              const img = document.createElement('img');
-              img.className = 'foto-instalador';
-              img.src = b.fotoUrl;
-              img.alt = 'Foto de ' + b.instalador;
-              div.appendChild(img);
+              // Busca la foto del instalador en el nodo instaladores
+              const fotoUrl = instaladores[b.instalador] || '';
+              if (fotoUrl) {
+                const img = document.createElement('img');
+                img.className = 'foto-instalador';
+                img.src = fotoUrl;
+                img.alt = 'Foto de ' + b.instalador;
+                div.appendChild(img);
+              }
             }
-          }
 
-          if (b.estado === 'Libre') {
-            div.onclick = async function() {
-              const input = document.getElementById('instalador');
-              const instalador = input.value.trim();
-              if (!instalador) {
-                input.classList.add('error');
-                setTimeout(() => input.classList.remove('error'), 300);
-                mostrarMensaje("Por favor ingresa tu número de instalador", "error");
-                return;
-              }
-
-              try {
-                const bahiaRef = ref(db, `bahias/${b.nombre}`);
-                const snapshot = await onValue(bahiaRef, { onlyOnce: true });
-                if (snapshot.val()?.estado === 'Libre') {
-                  await set(bahiaRef, {
-                    estado: 'Ocupada',
-                    instalador: instalador,
-                    fotoUrl: b.fotoUrl || ''
-                  });
-                  mostrarMensaje(`Reservaste ${b.nombre}`, "ok");
-                  input.value = '';
-                } else {
-                  mostrarMensaje("Esa bahía ya fue ocupada", "error");
+            if (b.estado === 'Libre') {
+              div.onclick = async function() {
+                const input = document.getElementById('instalador');
+                const instalador = input.value.trim();
+                if (!instalador) {
+                  input.classList.add('error');
+                  setTimeout(() => input.classList.remove('error'), 300);
+                  mostrarMensaje("Por favor ingresa tu número de instalador", "error");
+                  return;
                 }
-              } catch (error) {
-                console.error('Error al reservar la bahía:', error);
-                mostrarMensaje("Error al reservar la bahía", "error");
-              }
-            };
+
+                try {
+                  const bahiaRef = ref(db, `bahias/${b.nombre}`);
+                  const snapshot = await onValue(bahiaRef, { onlyOnce: true });
+                  if (snapshot.val()?.estado === 'Libre') {
+                    await set(bahiaRef, {
+                      estado: 'Ocupada',
+                      instalador: instalador,
+                      fotoUrl: instaladores[instalador] || ''
+                    });
+                    mostrarMensaje(`Reservaste ${b.nombre}`, "ok");
+                    input.value = '';
+                  } else {
+                    mostrarMensaje("Esa bahía ya fue ocupada", "error");
+                  }
+                } catch (error) {
+                  console.error('Error al reservar la bahía:', error);
+                  mostrarMensaje("Error al reservar la bahía", "error");
+                }
+              };
+            }
+
+            if (bahiaReservada && b.nombre === bahiaReservada) div.classList.add('flash-pop');
+
+            cont.appendChild(div);
           }
-
-          if (bahiaReservada && b.nombre === bahiaReservada) div.classList.add('flash-pop');
-
-          cont.appendChild(div);
         });
       }, {
-        onlyOnce: false // Escucha cambios en tiempo real
+        onlyOnce: false
       });
     } catch (error) {
       console.error('Error en cargarBahias:', error);
