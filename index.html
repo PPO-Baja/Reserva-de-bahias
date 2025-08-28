@@ -117,6 +117,37 @@
       object-fit: cover;
       border: 2px solid white;
     }
+
+    /* --- Botones de Gestión --- */
+    .management-buttons {
+      margin: 1rem auto;
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+    }
+    .management-buttons button {
+      padding: 0.5rem 1rem;
+      font-size: 0.8rem;
+      border: none;
+      border-radius: 0.3rem;
+      background: #28a745;
+      color: white;
+      cursor: pointer;
+    }
+    .management-buttons button:hover {
+      background: #218838;
+    }
+    .management-buttons .password-container {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .management-buttons input[type="password"] {
+      padding: 0.5rem;
+      font-size: 0.8rem;
+      border: 1px solid #ccc;
+      border-radius: 0.3rem;
+    }
   </style>
 </head>
 <body>
@@ -134,13 +165,21 @@
 <!-- Mensaje -->
 <div id="mensaje"></div>
 
+<!-- Botones de Gestión -->
+<div class="management-buttons">
+  <div class="password-container">
+    <input type="password" id="passwordInput" placeholder="Contraseña">
+    <button id="liberarBahias">Liberar Bahías Ocupadas</button>
+  </div>
+</div>
+
 <!-- Contenedor de bahías -->
 <div id="contenedor" class="grid"></div>
 
 <script type="module">
   // Import Firebase SDKs
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js';
-  import { getDatabase, ref, onValue, set } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js';
+  import { getDatabase, ref, onValue, set, get } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js';
 
   // Your Firebase configuration
   const firebaseConfig = {
@@ -210,7 +249,6 @@
               instDiv.textContent = b.instalador;
               div.appendChild(instDiv);
 
-              // Busca la foto del instalador en el nodo instaladores
               const fotoUrl = instaladores[b.instalador] || '';
               if (fotoUrl) {
                 const img = document.createElement('img');
@@ -234,7 +272,7 @@
 
                 try {
                   const bahiaRef = ref(db, `bahias/${b.nombre}`);
-                  const snapshot = await onValue(bahiaRef, { onlyOnce: true });
+                  const snapshot = await get(bahiaRef);
                   if (snapshot.val()?.estado === 'Libre') {
                     await set(bahiaRef, {
                       estado: 'Ocupada',
@@ -267,6 +305,48 @@
     }
   }
 
+  // Gestión de liberación de bahías con contraseña
+  document.getElementById('liberarBahias').addEventListener('click', async () => {
+    const passwordInput = document.getElementById('passwordInput');
+    const password = passwordInput.value.trim();
+
+    if (password !== 'bc1516') {
+      mostrarMensaje('Contraseña incorrecta', 'error');
+      passwordInput.value = '';
+      return;
+    }
+
+    try {
+      const bahiasRef = ref(db, 'bahias');
+      const snapshot = await get(bahiasRef);
+      const bahias = snapshot.val() || {};
+      let liberadas = 0;
+
+      Object.keys(bahias).forEach(key => {
+        if (key !== 'instaladores' && bahias[key].estado === 'Ocupada') {
+          set(ref(db, `bahias/${key}`), {
+            estado: 'Libre',
+            instalador: '',
+            fotoUrl: ''
+          });
+          liberadas++;
+        }
+      });
+
+      if (liberadas > 0) {
+        mostrarMensaje(`Se liberaron ${liberadas} bahías`, 'ok');
+      } else {
+        mostrarMensaje('No hay bahías ocupadas para liberar', 'error');
+      }
+      passwordInput.value = '';
+    } catch (error) {
+      console.error('Error al liberar bahías:', error);
+      mostrarMensaje('Error al liberar bahías', 'error');
+      passwordInput.value = '';
+    }
+  });
+
+  // Iniciar carga de bahías
   cargarBahias();
 </script>
 
