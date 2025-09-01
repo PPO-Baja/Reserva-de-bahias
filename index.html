@@ -259,7 +259,9 @@
             instDiv.textContent = b.instalador;
             div.appendChild(instDiv);
 
-            const fotoUrl = instaladores[b.instalador] || '';
+            //const fotoUrl = instaladores[b.instalador] || '';
+            const fotoUrl = instaladores[String(b.instalador).padStart(3, '0')] || '';
+
             if (fotoUrl) {
               const img = document.createElement('img');
               img.className = 'foto-instalador';
@@ -361,6 +363,7 @@
 
 </body>
 </html>
+
 
 
 
