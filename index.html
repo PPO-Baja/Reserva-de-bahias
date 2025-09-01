@@ -260,6 +260,7 @@
             div.appendChild(instDiv);
 
             //const fotoUrl = instaladores[b.instalador] || '';
+            console.log("Instaladores cargados:", instaladores);
             const fotoUrl = instaladores[String(b.instalador).padStart(3, '0')] || '';
 
             if (fotoUrl) {
@@ -363,6 +364,7 @@
 
 </body>
 </html>
+
 
 
 
