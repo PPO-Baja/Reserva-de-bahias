@@ -7,187 +7,370 @@
   <link rel="manifest" href="manifest.json" />
   <link rel="icon" href="icon-192.png" />
   <style>
-    /* ... Tu CSS sin cambios ... */
+    :root {
+      --accent: #ff5722;
+      --muted: #666;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: #f2f2f2;
+      margin: 1rem auto;
+      padding: 0 1rem;
+      max-width: 100%;
+    }
+
+    h2 {
+      margin: 0;
+    }
+
+    /* --- Brand --- */
+    .brand .toyota {
+      color: var(--accent);
+      font-weight: 500;
+    }
+    .brand small {
+      color: #0978c8;
+      font-weight: 300;
+    }
+
+    .brand-container {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      margin: 1rem auto;
+      font-size: 0.9rem;
+      color: var(--muted);
+      gap: 0.5rem;
+      text-align: center;
+    }
+
+    /* --- Input --- */
+    #instalador {
+      padding: 0.6rem 1rem;
+      font-size: 0.6rem;
+      text-align: center;
+      border-radius: 0.5rem;
+      border: 1px solid #ccc;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+      outline: none;
+      transition: border-color 0.3s, box-shadow 0.3s;
+      width: 50%;
+      max-width: 300px;
+    }
+
+    #instalador:focus {
+      border-color: #28a745;
+      box-shadow: 0 0 8px rgba(40, 167, 69, 0.5);
+    }
+    #instalador.error {
+      animation: shake 0.3s;
+      border-color: #dc3545;
+    }
+    @keyframes shake {
+      25% {
+        transform: translateX(-4px);
+      }
+      50% {
+        transform: translateX(4px);
+      }
+      75% {
+        transform: translateX(-4px);
+      }
+    }
+
+    /* --- Mensajes --- */
+    #mensaje {
+      margin: 0.5rem;
+      padding: 0.5rem;
+      display: none;
+      border-radius: 0.3rem;
+      font-weight: bold;
+    }
+    .ok {
+      background: #d4edda;
+      color: #155724;
+    }
+    .error {
+      background: #f8d7da;
+      color: #721c24;
+    }
+
+    /* --- Grid flexible --- */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+      gap: 0.5rem;
+      margin: 1rem auto;
+      width: 100%;
+      max-width: 600px;
+    }
+
+    .bahia {
+      aspect-ratio: 1 / 1;
+      /* siempre cuadrado */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border-radius: 0.6rem;
+      color: white;
+      font-weight: bold;
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: transform 0.1s;
+      padding: 0.5rem;
+    }
+    .bahia:hover {
+      transform: scale(1.05);
+    }
+    .libre {
+      background: #28a745;
+    }
+    .ocupada {
+      background: #dc3545;
+      cursor: not-allowed;
+    }
+
+    .flash-pop {
+      animation: flashPopAnim 0.6s;
+    }
+    @keyframes flashPopAnim {
+      30% {
+        background: #ffc107;
+        transform: scale(1.2);
+      }
+      60% {
+        background: #28a745;
+        transform: scale(1.1);
+      }
+    }
+
+    .nombre-bahia {
+      font-size: 0.6rem;
+    }
+    .nombre-instalador {
+      font-size: 0.9rem;
+      margin-top: 0.2rem;
+      font-weight: bold;
+    }
+    .foto-instalador {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-top: 0.2rem;
+      object-fit: cover;
+      border: 2px solid white;
+    }
+
+    /* --- Botones de Gestión --- */
+    .management-buttons {
+      margin: 1rem auto;
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+    }
+    .management-buttons button {
+      padding: 0.5rem 1rem;
+      font-size: 0.8rem;
+      border: none;
+      border-radius: 0.3rem;
+      background: #28a745;
+      color: white;
+      cursor: pointer;
+    }
+    .management-buttons button:hover {
+      background: #218838;
+    }
+    .management-buttons .password-container {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .management-buttons input[type="password"] {
+      padding: 0.5rem;
+      font-size: 0.8rem;
+      border: 1px solid #ccc;
+      border-radius: 0.3rem;
+    }
   </style>
 </head>
 <body>
+  <!-- Brand -->
+  <div class="brand-container">
+    <div class="brand"><span class="toyota">PPO</span> <small>Baja California</small></div>
+    <div class="titulo"><h2>Reserva de Bahías</h2></div>
+    <div class="opcion">| Post Production Option</div>
+  </div>
 
-<!-- ... Tu HTML sin cambios ... -->
+  <!-- Input instalador -->
+  <div><input id="instalador" type="text" placeholder="Ingresa tu No. de instalador" /></div>
 
-<script type="module">
-  import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js';
-  import { getDatabase, ref, onValue, set, get } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js';
+  <!-- Mensaje -->
+  <div id="mensaje"></div>
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyDZOGHFPrx52Hx1qUKPU_c6VpiGvrHL0_k",
-    authDomain: "reserva-de-bahias.firebaseapp.com",
-    databaseURL: "https://reserva-de-bahias-default-rtdb.firebaseio.com",
-    projectId: "reserva-de-bahias",
-    storageBucket: "reserva-de-bahias.firebasestorage.app",
-    messagingSenderId: "506659561186",
-    appId: "1:506659561186:web:85ddac2764073d21dbc8bb"
-  };
+  <!-- Contenedor de bahías -->
+  <div id="contenedor" class="grid"></div>
 
-  const app = initializeApp(firebaseConfig);
-  const db = getDatabase(app);
+  <!-- Botones de Gestión -->
+  <div class="management-buttons">
+    <div class="password-container">
+      <input type="password" id="passwordInput" placeholder="Contraseña" />
+      <button id="liberarBahias">Liberar Bahías Ocupadas</button>
+    </div>
+  </div>
 
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('sw.js')
-        .then(registration => console.log('Service Worker registrado con éxito:', registration))
-        .catch(error => console.log('Error al registrar el Service Worker:', error));
-    });
-  }
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js';
+    import { getDatabase, ref, onValue, set, get } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js';
 
-  function mostrarMensaje(texto, tipo) {
-    const msg = document.getElementById("mensaje");
-    msg.textContent = texto;
-    msg.className = tipo;
-    msg.style.display = "block";
-    setTimeout(() => msg.style.display = "none", 3000);
-  }
+    const firebaseConfig = {
+      apiKey: "AIzaSyDZOGHFPrx52Hx1qUKPU_c6VpiGvrHL0_k",
+      authDomain: "reserva-de-bahias.firebaseapp.com",
+      databaseURL: "https://reserva-de-bahias-default-rtdb.firebaseio.com",
+      projectId: "reserva-de-bahias",
+      storageBucket: "reserva-de-bahias.firebasestorage.app",
+      messagingSenderId: "506659561186",
+      appId: "1:506659561186:web:85ddac2764073d21dbc8bb",
+    };
 
-  async function cargarBahias(bahiaReservada) {
-    try {
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    function mostrarMensaje(texto, tipo) {
+      const msg = document.getElementById('mensaje');
+      msg.textContent = texto;
+      msg.className = tipo;
+      msg.style.display = 'block';
+      setTimeout(() => (msg.style.display = 'none'), 3000);
+    }
+
+    function cargarBahias() {
       const bahiasRef = ref(db, 'bahias');
-      onValue(bahiasRef, (snapshot) => {
-        const data = snapshot.val();
-        if (!data) {
-          mostrarMensaje("No se encontraron bahías", "error");
-          return;
-        }
+      onValue(
+        bahiasRef,
+        (snapshot) => {
+          const data = snapshot.val();
+          if (!data) {
+            mostrarMensaje('No se encontraron bahías', 'error');
+            return;
+          }
 
-        const cont = document.getElementById('contenedor');
-        cont.innerHTML = '';
+          const cont = document.getElementById('contenedor');
+          cont.innerHTML = '';
 
-        const instaladores = data.instaladores || {};
-        // Obtener sólo las claves de bahías (excluyendo "instaladores")
-        const bahiaKeys = Object.keys(data).filter(key => key !== 'instaladores');
-        bahiaKeys.sort((a, b) => parseInt(a.replace(/\D/g,'')) - parseInt(b.replace(/\D/g,'')));
+          const instaladores = data.instaladores || {};
+          const bahiaKeys = Object.keys(data).filter((k) => k !== 'instaladores');
+          bahiaKeys.sort((a, b) => parseInt(a.replace(/\D/g, '')) - parseInt(b.replace(/\D/g, '')));
 
-        bahiaKeys.forEach(key => {
-          const b = { nombre: key, ...data[key] };
+          bahiaKeys.forEach((key) => {
+            const b = { nombre: key, ...data[key] };
+            const div = document.createElement('div');
+            div.className = 'bahia ' + (b.estado === 'Libre' ? 'libre' : 'ocupada');
 
-          const div = document.createElement('div');
-          div.className = 'bahia ' + (b.estado === 'Libre' ? 'libre' : 'ocupada');
+            const bahiaDiv = document.createElement('div');
+            bahiaDiv.className = 'nombre-bahia';
+            bahiaDiv.textContent = b.nombre;
+            div.appendChild(bahiaDiv);
 
-          const bahiaDiv = document.createElement('div');
-          bahiaDiv.className = 'nombre-bahia';
-          bahiaDiv.textContent = b.nombre;
-          div.appendChild(bahiaDiv);
+            if (b.estado === 'Ocupada' && b.instalador) {
+              const instDiv = document.createElement('div');
+              instDiv.className = 'nombre-instalador';
+              instDiv.textContent = b.instalador;
+              div.appendChild(instDiv);
 
-          if (b.estado === 'Ocupada' && b.instalador) {
-            const instDiv = document.createElement('div');
-            instDiv.className = 'nombre-instalador';
-            instDiv.textContent = b.instalador;
-            div.appendChild(instDiv);
+              const claveInst = String(b.instalador).padStart(3, '0');
+              const fotoUrl = instaladores[claveInst] || '';
 
-            // Obtener foto del instalador con padding 3 dígitos
-            const claveInstalador = String(b.instalador).padStart(3, '0');
-            const fotoUrl = instaladores[claveInstalador] || '';
-
-            console.log(`Bahía ${b.nombre} - Instalador: ${b.instalador} - Foto URL:`, fotoUrl);
-
-            if (fotoUrl) {
-              const img = document.createElement('img');
-              img.className = 'foto-instalador';
-              img.src = fotoUrl;
-              img.alt = `Foto de ${b.instalador}`;
-              div.appendChild(img);
+              if (fotoUrl) {
+                const img = document.createElement('img');
+                img.className = 'foto-instalador';
+                img.src = fotoUrl;
+                img.alt = 'Foto de ' + b.instalador;
+                div.appendChild(img);
+              }
             }
-          }
 
-          if (b.estado === 'Libre') {
-            div.onclick = async () => {
-              const input = document.getElementById('instalador');
-              const instalador = input.value.trim();
-              if (!instalador) {
-                input.classList.add('error');
-                setTimeout(() => input.classList.remove('error'), 300);
-                mostrarMensaje("Por favor ingresa tu número de instalador", "error");
-                return;
-              }
-
-              try {
-                const bahiaRef = ref(db, `bahias/${b.nombre}`);
-                const snapshot = await get(bahiaRef);
-                if (snapshot.val()?.estado === 'Libre') {
-                  await set(bahiaRef, {
-                    estado: 'Ocupada',
-                    instalador: instalador
-                    // No guardamos fotoUrl aquí, se obtiene de instaladores al cargar
-                  });
-                  mostrarMensaje(`Reservaste ${b.nombre}`, "ok");
-                  input.value = '';
-                } else {
-                  mostrarMensaje("Esa bahía ya fue ocupada", "error");
+            if (b.estado === 'Libre') {
+              div.onclick = async () => {
+                const input = document.getElementById('instalador');
+                const instalador = input.value.trim();
+                if (!instalador) {
+                  input.classList.add('error');
+                  setTimeout(() => input.classList.remove('error'), 300);
+                  mostrarMensaje('Por favor ingresa tu número de instalador', 'error');
+                  return;
                 }
-              } catch (error) {
-                console.error('Error al reservar la bahía:', error);
-                mostrarMensaje("Error al reservar la bahía", "error");
-              }
-            };
-          }
+                try {
+                  const bahiaRef = ref(db, `bahias/${b.nombre}`);
+                  const snapshot = await get(bahiaRef);
+                  if (snapshot.val()?.estado === 'Libre') {
+                    await set(bahiaRef, {
+                      estado: 'Ocupada',
+                      instalador: instalador,
+                    });
+                    mostrarMensaje(`Reservaste ${b.nombre}`, 'ok');
+                    input.value = '';
+                  } else {
+                    mostrarMensaje('Esa bahía ya fue ocupada', 'error');
+                  }
+                } catch (error) {
+                  console.error(error);
+                  mostrarMensaje('Error al reservar la bahía', 'error');
+                }
+              };
+            }
 
-          if (bahiaReservada && b.nombre === bahiaReservada) {
-            div.classList.add('flash-pop');
-          }
-
-          cont.appendChild(div);
-        });
-      }, { onlyOnce: false });
-    } catch (error) {
-      console.error('Error en cargarBahias:', error);
-      mostrarMensaje("Error al cargar las bahías", "error");
-    }
-  }
-
-  document.getElementById('liberarBahias').addEventListener('click', async () => {
-    const passwordInput = document.getElementById('passwordInput');
-    const password = passwordInput.value.trim();
-
-    if (password !== 'bc1516') {
-      mostrarMensaje('Contraseña incorrecta', 'error');
-      passwordInput.value = '';
-      return;
-    }
-
-    try {
-      const bahiasRef = ref(db, 'bahias');
-      const snapshot = await get(bahiasRef);
-      const bahias = snapshot.val() || {};
-      let liberadas = 0;
-
-      Object.keys(bahias).forEach(key => {
-        if (key !== 'instaladores' && bahias[key].estado === 'Ocupada') {
-          set(ref(db, `bahias/${key}`), {
-            estado: 'Libre',
-            instalador: ''
+            cont.appendChild(div);
           });
-          liberadas++;
-        }
-      });
-
-      if (liberadas > 0) {
-        mostrarMensaje(`Se liberaron ${liberadas} bahías`, 'ok');
-      } else {
-        mostrarMensaje('No hay bahías ocupadas para liberar', 'error');
-      }
-      passwordInput.value = '';
-    } catch (error) {
-      console.error('Error al liberar bahías:', error);
-      mostrarMensaje('Error al liberar bahías', 'error');
-      passwordInput.value = '';
+        },
+        { onlyOnce: false }
+      );
     }
-  });
 
-  cargarBahias();
-</script>
+    document.getElementById('liberarBahias').addEventListener('click', async () => {
+      const passwordInput = document.getElementById('passwordInput');
+      const password = passwordInput.value.trim();
 
+      if (password !== 'bc1516') {
+        mostrarMensaje('Contraseña incorrecta', 'error');
+        passwordInput.value = '';
+        return;
+      }
+
+      try {
+        const bahiasRef = ref(db, 'bahias');
+        const snapshot = await get(bahiasRef);
+        const bahias = snapshot.val() || {};
+        let liberadas = 0;
+
+        for (const key in bahias) {
+          if (key !== 'instaladores' && bahias[key].estado === 'Ocupada') {
+            await set(ref(db, `bahias/${key}`), {
+              estado: 'Libre',
+              instalador: '',
+            });
+            liberadas++;
+          }
+        }
+
+        if (liberadas > 0) {
+          mostrarMensaje(`Se liberaron ${liberadas} bahías`, 'ok');
+        } else {
+          mostrarMensaje('No hay bahías ocupadas para liberar', 'error');
+        }
+        passwordInput.value = '';
+      } catch (error) {
+        console.error(error);
+        mostrarMensaje('Error al liberar bahías', 'error');
+        passwordInput.value = '';
+      }
+    });
+
+    cargarBahias();
+  </script>
 </body>
 </html>
-
-
-
-
-
