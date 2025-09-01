@@ -1,10 +1,10 @@
 const CACHE_NAME = 'reserva-bahias-v1';
 const urlsToCache = [
-  '/',
-  '/index.html',
-  '/icon-192.png',
-  '/icon-512.png',
-  '/manifest.json',
+  //'/',
+  'index.html',
+  'icon-192.png',
+  'icon-512.png',
+  'manifest.json',
   'https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js',
   'https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js'
 ];
@@ -57,3 +57,4 @@ self.addEventListener('activate', event => {
     })
   );
 });
+
