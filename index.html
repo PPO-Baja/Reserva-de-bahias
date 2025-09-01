@@ -242,6 +242,9 @@
 
         bahiaKeys.forEach(key => {
           const b = { nombre: key, ...data[key] };
+          console.log("Instalador:", b.instalador);
+          console.log("Foto URL:", instaladores[b.instalador]);
+
           const div = document.createElement('div');
           div.className = 'bahia ' + (b.estado === 'Libre' ? 'libre' : 'ocupada');
 
@@ -358,5 +361,6 @@
 
 </body>
 </html>
+
 
 
